@@ -6,7 +6,6 @@ Ever joined a new team and been handed a 5-year-old codebase with no documentati
 
 Paste a GitHub link or drop a ZIP file. Claude does the rest — explains what the code does part by part, flags hidden problems, maps out file dependencies, and even generates a prompt you can paste back into Claude to recreate the entire project.
 
-![Neo-Brutalism UI](https://via.placeholder.com/1200x600/FFE951/000000?text=Legacy+Code+Archaeologist)
 
 ---
 
@@ -56,7 +55,7 @@ Neo-Brutalism — bold borders, flat colors, zero shadows. Wanted it to feel dif
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/legacy-code-archaeologist.git
+git clone https://github.com/0xnurrabby/legacy-code-archaeologist.git
 cd legacy-code-archaeologist
 
 # Install dependencies
