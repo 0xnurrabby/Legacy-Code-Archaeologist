@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legacy Code Archaeologist - Powered by Claude AI</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Toast Notification for Congrats -->
+<div class="toast" id="success-toast">
+  <div class="toast-icon">✓</div>
+  <div class="toast-content">
+    <strong>Analysis Complete!</strong>
+    <span>Powered by Claude AI</span>
+  </div>
+</div>
+
+<div class="container">
+  
+  <div class="header">
+    <!-- Language Selector -->
+    <div class="lang-selector">
+      <button class="lang-btn" id="lang-btn" onclick="toggleLangMenu()">
+        <span id="current-lang-icon">🌐</span>
+        <span>EXPLAIN IN</span>
+        <span id="current-lang-name">ENGLISH</span>
+        <span class="lang-arrow">▼</span>
+      </button>
+      <div class="lang-menu" id="lang-menu">
+        <div class="lang-option active" onclick="selectLanguage(event, 'english', '🇬🇧', 'ENGLISH')">
+          <span>🇬🇧</span> English
+        </div>
+        <div class="lang-option" onclick="selectLanguage(event, 'bangla', '🇧🇩', 'বাংলা')">
+          <span>🇧🇩</span> বাংলা (Bangla)
+        </div>
+        <div class="lang-option" onclick="selectLanguage(event, 'hindi', '🇮🇳', 'हिन्दी')">
+          <span>🇮🇳</span> हिन्दी (Hindi)
+        </div>
+        <div class="lang-option" onclick="selectLanguage(event, 'japanese', '🇯🇵', '日本語')">
+          <span>🇯🇵</span> 日本語 (Japanese)
+        </div>
+        <div class="lang-option" onclick="selectLanguage(event, 'korean', '🇰🇷', '한국어')">
+          <span>🇰🇷</span> 한국어 (Korean)
+        </div>
+        <div class="lang-option" onclick="selectLanguage(event, 'spanish', '🇪🇸', 'ESPAÑOL')">
+          <span>🇪🇸</span> Español (Spanish)
+        </div>
+        <div class="lang-option" onclick="selectLanguage(event, 'italian', '🇮🇹', 'ITALIANO')">
+          <span>🇮🇹</span> Italiano (Italian)
+        </div>
+        <div class="lang-option" onclick="selectLanguage(event, 'russian', '🇷🇺', 'РУССКИЙ')">
+          <span>🇷🇺</span> Русский (Russian)
+        </div>
+      </div>
+    </div>
+
+    <h1>Legacy Code Archaeologist</h1>
+    <p>UNDERSTAND ANY CODEBASE IN MINUTES, NOT DAYS</p>
+    <div class="powered-by">POWERED BY CLAUDE AI</div>
+  </div>
+
+  <div class="input-section">
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="switchInputTab(event, 'github')">GITHUB LINK</button>
+      <button class="tab-btn" onclick="switchInputTab(event, 'zip')">UPLOAD ZIP</button>
+    </div>
+
+    <div id="github-tab">
+      <input type="text" class="input-field" id="github-url" placeholder="https://github.com/username/repository">
+      <p style="font-size: 12px; margin-bottom: 10px;">Public repos work instantly. Private repos need GitHub token.</p>
+    </div>
+
+    <div id="zip-tab" style="display:none;">
+      <label class="file-upload">
+        <input type="file" accept=".zip" id="zip-file" onchange="handleFileUpload(event)">
+        <div style="font-size: 40px; margin-bottom: 10px;">📦</div>
+        <div style="font-weight: 900; text-transform: uppercase;">Click to upload ZIP file</div>
+        <div style="font-size: 12px; margin-top: 5px;" id="file-name">Max size: 100MB</div>
+      </label>
+    </div>
+
+    <div class="button-row">
+      <button class="nb-btn nb-btn-primary analyze-btn" id="analyze-btn" onclick="analyzeCode()">
+        <span id="btn-text">ANALYZE CODEBASE</span>
+        <span id="btn-loader" style="display:none;">
+          <span class="spinner"></span>
+          <span id="btn-status">ANALYZING</span>
+          <span id="btn-timer">0s / ~45s</span>
+        </span>
+      </button>
+      <button class="nb-btn nb-btn-stop" id="stop-btn" onclick="stopAnalysis()" style="display:none;">
+        STOP
+      </button>
+    </div>
+  </div>
+
+  <!-- COMPACT LOADING ANIMATION -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="terminal">
+        <div class="terminal-header">
+          <span class="term-dot red"></span>
+          <span class="term-dot yellow"></span>
+          <span class="term-dot green"></span>
+          <span class="terminal-title">claude-analyzer</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line" id="term-line-1">
+            <span class="prompt">$</span> <span class="typing" id="typing-text">Connecting to Claude AI...</span>
+          </div>
+          <div class="code-tip" id="code-tip">
+            <span class="tip-label">TIP:</span> <span id="tip-text">Claude can understand 200K tokens in a single context</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-steps">
+          <div class="step" id="step-1">FETCH</div>
+          <div class="step" id="step-2">PARSE</div>
+          <div class="step" id="step-3">ANALYZE</div>
+          <div class="step" id="step-4">RENDER</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SECTION -->
+  <div class="results-section" id="results">
+    
+    <div class="result-tabs">
+      <button class="result-tab active" onclick="switchResultTab(event, 'purpose')">
+        <span class="tab-name">PURPOSE</span>
+        <span class="tab-desc">What this project does</span>
+      </button>
+      <button class="result-tab" onclick="switchResultTab(event, 'prompt')">
+        <span class="tab-name">PROMPT</span>
+        <span class="tab-desc">Recreate with Claude AI</span>
+      </button>
+      <button class="result-tab" onclick="switchResultTab(event, 'graph')">
+        <span class="tab-name">GRAPH</span>
+        <span class="tab-desc">File connections</span>
+      </button>
+      <button class="result-tab" onclick="switchResultTab(event, 'why')">
+        <span class="tab-name">WHY</span>
+        <span class="tab-desc">Design decisions</span>
+      </button>
+      <button class="result-tab" onclick="switchResultTab(event, 'landmines')">
+        <span class="tab-name">LANDMINES</span>
+        <span class="tab-desc">Hidden problems</span>
+      </button>
+      <button class="result-tab" onclick="switchResultTab(event, 'onboarding')">
+        <span class="tab-name">ONBOARDING</span>
+        <span class="tab-desc">Learning path</span>
+      </button>
+      <button class="result-tab" onclick="switchResultTab(event, 'query')">
+        <span class="tab-name">QUERY</span>
+        <span class="tab-desc">Ask questions</span>
+      </button>
+    </div>
+
+    <div class="result-content">
+      <div class="result-panel active" id="panel-purpose">
+        <h2>Code Purpose Explainer</h2>
+        <p class="panel-intro">Complete teacher-style breakdown of this project</p>
+        <div id="purpose-content">Loading...</div>
+      </div>
+
+      <div class="result-panel" id="panel-prompt">
+        <h2>Prompt Reverse Engineer</h2>
+        <p class="panel-intro">Copy this prompt → Paste in Claude AI → Get exact same code</p>
+        
+        <div class="prompt-guide">
+          <div class="guide-step">
+            <div class="guide-number">1</div>
+            <div class="guide-text">Click <strong>COPY</strong></div>
+          </div>
+          <div class="guide-arrow">→</div>
+          <div class="guide-step">
+            <div class="guide-number">2</div>
+            <div class="guide-text">Open <a href="https://claude.ai" target="_blank">claude.ai</a></div>
+          </div>
+          <div class="guide-arrow">→</div>
+          <div class="guide-step">
+            <div class="guide-number">3</div>
+            <div class="guide-text">Paste & Generate</div>
+          </div>
+        </div>
+
+        <div class="prompt-box">
+          <button class="copy-btn" onclick="copyPrompt()">COPY PROMPT</button>
+          <div id="prompt-text">Loading...</div>
+        </div>
+      </div>
+
+      <div class="result-panel" id="panel-graph">
+        <h2>Dependency Graph</h2>
+        <p class="panel-intro">Visual map of how files connect to each other</p>
+        <div id="graph-content"></div>
+      </div>
+
+      <div class="result-panel" id="panel-why">
+        <h2>Why Was This Written?</h2>
+        <p class="panel-intro">Understanding the reasoning behind design decisions</p>
+        <div id="why-content">Loading...</div>
+      </div>
+
+      <div class="result-panel" id="panel-landmines">
+        <h2>Hidden Landmines Detected</h2>
+        <p class="panel-intro">Issues and risks found in the codebase</p>
+        <div id="landmines-content">Loading...</div>
+      </div>
+
+      <div class="result-panel" id="panel-onboarding">
+        <h2>Onboarding Roadmap</h2>
+        <p class="panel-intro">Step-by-step learning path like a mentor teaching you</p>
+        <div id="onboarding-content">Loading...</div>
+      </div>
+
+      <div class="result-panel" id="panel-query">
+        <h2>Natural Language Query</h2>
+        <p class="panel-intro">Ask anything about this codebase in plain English</p>
+        <div class="query-box">
+          <input type="text" id="query-input" placeholder="e.g., Where is the payment logic?">
+          <button class="nb-btn nb-btn-dark" onclick="submitQuery()">ASK</button>
+        </div>
+        <div id="query-results"></div>
+      </div>
+    </div>
+
+    <!-- Minimal Claude Credit -->
+    <div class="claude-credit">
+      <p>Analysis powered by <strong>Claude AI</strong> — the most thoughtful AI for understanding code.</p>
+      <a href="https://claude.ai" target="_blank" class="nb-btn nb-btn-dark">Try Claude AI</a>
+    </div>
+  </div>
+
+  <!-- FEATURES GRID (Bottom) -->
+  <div class="features-section">
+    <h2 class="features-title">WHAT THIS TOOL CAN DO</h2>
+    <div class="features-grid">
+      <div class="feature-card pink">
+        <div class="icon">🕸️</div>
+        <h3>Dependency Graph</h3>
+        <p>Visual map showing which file calls which file</p>
+      </div>
+      <div class="feature-card blue">
+        <div class="icon">🤔</div>
+        <h3>Why Written?</h3>
+        <p>AI explains decision behind every function</p>
+      </div>
+      <div class="feature-card green">
+        <div class="icon">💣</div>
+        <h3>Hidden Landmines</h3>
+        <p>Detect deprecated patterns, memory leaks, bugs</p>
+      </div>
+      <div class="feature-card orange">
+        <div class="icon">🗺️</div>
+        <h3>Onboarding Map</h3>
+        <p>Step-by-step learning flow for new developers</p>
+      </div>
+      <div class="feature-card purple">
+        <div class="icon">💬</div>
+        <h3>Natural Query</h3>
+        <p>Ask questions, get exact file and line numbers</p>
+      </div>
+      <div class="feature-card yellow">
+        <div class="icon">📖</div>
+        <h3>Purpose Explainer</h3>
+        <p>Detailed breakdown of what the code does</p>
+      </div>
+      <div class="feature-card cyan">
+        <div class="icon">🎯</div>
+        <h3>Prompt Generator</h3>
+        <p>Reverse-engineer code into recreation prompt</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
