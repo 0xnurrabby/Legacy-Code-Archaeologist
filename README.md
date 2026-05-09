@@ -1,65 +1,99 @@
-# 🏛 Legacy Code Archaeologist
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,17,24&height=180&section=header&text=Legacy+Code+Archaeologist&fontSize=32&fontColor=000000&fontAlignY=38&desc=Understand+any+codebase+in+minutes+%E2%80%94+powered+by+Claude+AI&descAlignY=58&descSize=14&animation=fadeIn" width="100%"/>
 
-> Understand any codebase in minutes, not days. Powered by Claude AI.
+<div align="center">
 
-Ever joined a new team and been handed a 5-year-old codebase with no documentation, no original developer around, and a deadline looming? Yeah, me too. That pain is why this tool exists.
+[![License](https://img.shields.io/badge/MIT-bbf7d0?style=for-the-badge&logoColor=000)](LICENSE)
+[![Platform](https://img.shields.io/badge/Browser-bfdbfe?style=for-the-badge&logoColor=000)]()
+[![Tech](https://img.shields.io/badge/Claude%20AI%20%2B%20JavaScript-fde68a?style=for-the-badge&logoColor=000)]()
 
-Paste a GitHub link or drop a ZIP file. Claude does the rest — explains what the code does part by part, flags hidden problems, maps out file dependencies, and even generates a prompt you can paste back into Claude to recreate the entire project.
+</div>
 
-
----
-
-## ✨ What It Actually Does
-
-### 📖 Code Purpose Explainer
-Breaks down the entire project part by part like a patient teacher would. Tells you what each module does, who the project is built for, how it works step-by-step, and shows real-world examples. No more guessing.
-
-### 🎯 Prompt Reverse Engineer
-This one's wild. Point it at any codebase and it generates a detailed prompt that, when pasted into Claude AI, recreates the exact same project. Great for learning, great for cloning patterns, great for showing your teammate "this is how it should be built."
-
-### 🕸 Dependency Graph
-Visual map showing which file imports which. No more Ctrl+F-ing through 200 files to figure out where something is used.
-
-### 🤔 Why Was This Written?
-Claude analyzes design decisions and explains the probable reasoning behind them — patterns, trade-offs, and constraints the original dev faced.
-
-### 💣 Hidden Landmines Detector
-Finds deprecated patterns, circular dependencies, potential memory leaks, and code smells before they become 3 AM production incidents.
-
-### 🗺 Onboarding Roadmap
-"Start with this file, then read that one, then look here." A step-by-step learning path for new devs joining the project.
-
-### 💬 Natural Language Query
-Ask questions like "where is the payment logic?" and get exact file names and line numbers back.
-
-### 🌐 Multi-Language Explanations
-Explanations available in 8 languages — English, বাংলা (Bangla), हिन्दी (Hindi), 日本語 (Japanese), 한국어 (Korean), Español, Italiano, Русский. Code stays in English, but the explanations translate to your language.
+<div align="center">
+<i>Paste a GitHub link or drop a ZIP file and Claude breaks down what the code does, maps dependencies, finds hidden problems, and generates a prompt to recreate the project.</i>
+</div>
 
 ---
 
-## 🎨 Design
+## ✦ Features
 
-Neo-Brutalism — bold borders, flat colors, zero shadows. Wanted it to feel different from the usual polished SaaS look. Also added 50+ funny coding quotes that rotate during loading because staring at a spinner is boring.
+<div align="center">
+
+| | Feature | What it does |
+|:---:|---|---|
+| 📖 | Code explainer | Breaks down every module and explains what it does like a patient teacher |
+| 🎯 | Prompt reverse engineer | Generates a Claude prompt that, when used, recreates the exact same project |
+| 🕸️ | Dependency graph | Visual map of which file imports which |
+| 🤔 | Design reasoning | Explains why code was written the way it was |
+| 💣 | Hidden landmines | Finds deprecated patterns, circular deps, memory leaks |
+| 🗺️ | Onboarding roadmap | Step-by-step learning path for new devs joining the project |
+| 💬 | Natural language query | Ask "where is the payment logic?" and get exact file names back |
+| 🌐 | Multi-language explanations | Available in 8 languages including Bengali |
+
+</div>
 
 ---
 
-## 🚀 Quick Start
+## ✦ Download & Run
 
-### Prerequisites
-
-- Node.js 18+ installed ([download here](https://nodejs.org))
-- A Claude API key ([get one here](https://console.anthropic.com))
-- A GitHub personal access token (optional but recommended for higher rate limits)
-
-### Installation
+**Step 1** .... Clone the repo
 
 ```bash
-# Clone the repo
-git clone https://github.com/0xnurrabby/legacy-code-archaeologist.git
-cd legacy-code-archaeologist
+git clone https://github.com/0xnurrabby/Legacy-Code-Archaeologist
+cd Legacy-Code-Archaeologist
+```
 
-# Install dependencies
+**Step 2** .... Install backend dependencies
+
+```bash
+cd backend
 npm install
+```
 
-# Copy the example env file
-cp .env.example .env.local
+**Step 3** .... Configure and run
+
+```bash
+# Set your Claude API key
+cp .env.example .env
+# Edit .env and add ANTHROPIC_API_KEY=your_key
+
+node server.js
+# Open http://localhost:3000 (or the port shown)
+```
+
+---
+
+## ✦ Setup
+
+```
+1. Clone the repo
+2. cd backend/ and run npm install
+3. Create a .env file with:
+   ANTHROPIC_API_KEY=your_claude_api_key
+4. Run node server.js
+5. Open the frontend (frontend/index.html) in your browser
+   or visit http://localhost:3000 if served by the backend
+6. Paste a GitHub URL or upload a ZIP file
+7. Choose an analysis type and click Run
+```
+
+---
+
+## ✦ Project Structure
+
+```
+Legacy-Code-Archaeologist/
+  backend/
+    server.js    ->  Express server, Claude API calls, analysis routing
+    package.json
+  frontend/
+    index.html   ->  main UI
+    script.js    ->  form handling, analysis request, result rendering
+    style.css    ->  styles
+  README.md
+```
+
+---
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,17,24&height=100&section=footer&animation=fadeIn" width="100%"/>
+
+<div align="center">MIT License .... built by <a href="https://github.com/0xnurrabby">0xnurrabby</a></div>
